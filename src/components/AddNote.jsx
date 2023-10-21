@@ -6,12 +6,13 @@ function AddNote() {
   const [Notess, setNote] = useState([]);
   const [selectedNote, setSelectedNote] = useState(null);
   const [editedContent, setEditedContent] = useState(""); 
+  const [editedHeading, setEditedHeading] = useState("");
 
   function AddNewNote() {
     const newNote = {
       id: uuidv4(),
-      heading: prompt("Enter a note title"),
-      content: prompt("Add note content")
+      heading: prompt("Enter a note title")||"Note",
+      content: prompt("Add note content")||"Content"
     };
     setNote((prevNotes) => [...prevNotes, newNote]);
   }
@@ -26,16 +27,20 @@ function AddNote() {
     setSelectedNote(id);
     const noteToEdit = Notess.find((note) => note.id === id);
     setEditedContent(noteToEdit.content); 
+    setEditedHeading(noteToEdit.heading);
   }
 
   function onEditContent(id, content) {
     
     setEditedContent(content);
   }
+  function onEditHeading(id, heading) {
+    setEditedHeading(heading); 
+  }
 
   function SaveEdit(id) {
     const updatedNotes = Notess.map((note) =>
-      note.id === id ? { ...note, content: editedContent } : note
+      note.id === id ? { ...note, content: editedContent, heading:editedHeading } : note
     );
     setNote(updatedNotes);
     setSelectedNote(null); 
@@ -54,6 +59,8 @@ function AddNote() {
           isEditing={selectedNote === note.id}
           onEditContent={onEditContent}
           editedContent={editedContent}
+          onEditHeading={onEditHeading} 
+          editedHeading={editedHeading}
           onSaveEdit={SaveEdit}
         />
       ))}
